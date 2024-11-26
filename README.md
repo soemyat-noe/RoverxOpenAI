@@ -1,4 +1,4 @@
-# RoverxOpenAI 
+# RoverxOpenAI  🌌
 
 
 
@@ -81,7 +81,7 @@ The OpenAI integration is what makes this fun! Chat with the bot like you're hav
 
 **User:** "Hey, Captain! Can you show me some photos from the Curiosity rover on 2022-12-01?"
 
-**Astronaut Bot:** "Roger that! Let me send you some cool shots from Mars. Hold on, astronaut!" 🌌🚀
+**Astronaut Bot:** "Roger that! Let me send you some cool shots from Mars. Hold on, astronaut!"
 
 **Response:** A list of URLs to Mars Rover photos taken on that date.
 
