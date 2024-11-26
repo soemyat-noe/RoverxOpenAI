@@ -21,7 +21,7 @@ def get_mars_photos(rover, date):
         data = response.json()
         photos = data.get("photos", [])
         if photos:
-            return [photo["img_src"] for photo in photos[:5]]  # Return up to 5 photos
+            return [photo["img_src"] for photo in photos[:5]]  
         else:
             return ["No photos found for this date."]
     else:
@@ -34,7 +34,7 @@ messages = [
 
 tools = [
     {
-        "type": "function",  # Add the 'type' property
+        "type": "function",  
         "name": "get_mars_photos",
         "description": "Fetches photos from a Mars rover based on the date provided.",
         "parameters": {
