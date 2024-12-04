@@ -3,6 +3,7 @@ import os
 import requests
 import json
 
+
 client = AzureOpenAI(
     api_key=os.getenv("AZURE_KEY"),
     azure_endpoint=os.getenv("AZURE_ENDPOINT"),
@@ -11,6 +12,7 @@ client = AzureOpenAI(
 
 def get_mars_photos(rover, date):
     api_key = os.getenv("NASA_API_KEY")
+    rover = rover.lower()
     url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos"
     params = {
         "earth_date": date,
@@ -28,15 +30,17 @@ def get_mars_photos(rover, date):
         return [f"Error: {response.status_code} - {response.reason}"]
 
 messages = [
-    {"role": "system", "content": "You are a helpful bot that provides Mars rover photos."},
-    {"role": "user", "content": "Give me photos from the Curiosity rover for 2023-12-01."}
+    {"role": "system", "content": "You are a helpful bot that provides Mars rover photos. If you cannot find something, check tools to call the functions available. Never say something is not available, try using functions first. Always call function"},
+    {"role": "user", "content": "Give me photos from the Mars Curiosity for 2023-12-01."}
 ]
 
-tools = [
+
+functions = [
     {
         "type": "function",  
+        "function" : {
         "name": "get_mars_photos",
-        "description": "Fetches photos from a Mars rover based on the date provided.",
+        "description": "Function that fetches photos from a specific Mars rover based on the input date, function should always be called if user asked for photos from mars rover, do not check the date range. User gives date and rover and will return pictures from mars rover on that date. Information is available from 2012 onwards.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -46,16 +50,18 @@ tools = [
             "required": ["rover", "date"]
         }
     }
+    }
 ]
 
-response = client.chat.completions.create(
+response_openai = client.chat.completions.create(
     model="gpt-4",
     messages=messages,
-    tools=tools,
+    tools=functions,
     tool_choice="auto"
 )
 
-response_message = response.choices[0].message
+print(response_openai)
+response_message = response_openai.choices[0].message
 gpt_tools = response_message.tool_calls
 
 if gpt_tools:
@@ -86,6 +92,6 @@ if gpt_tools:
                 model="gpt-4",
                 messages=messages
             )
-            print(second_response.choices[0].message.content)
+            print(second_response.choices[0].message)
 else:
-    print(response_message.content)
+    print(response_message)
